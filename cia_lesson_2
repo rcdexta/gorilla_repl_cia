@@ -1,0 +1,301 @@
+;; gorilla-repl.fileformat = 1
+
+;; **
+;;; # Learn Clojure 1
+;;; 
+;;; ## A Whirlwind Tour
+;;; 
+;;; ### Hello World
+;; **
+
+;; @@
+(println "hello world")
+;; @@
+
+;; **
+;;; ###doc and find-doc
+;; **
+
+;; @@
+(use 'clojure.repl)
+(doc str)
+(find-doc "pos?")
+;; @@
+
+;; **
+;;; ###Program Structure
+;; **
+
+;; @@
+(defn hello [name]
+  (str "hello " name ))
+
+(def hello (fn [name]
+             (str "hello " name))) ;equivalent of defn
+;; @@
+
+;; **
+;;; ###Let form
+;;; The `let` form accepts as its first argument a vector containing an even number of forms, followed by zero or more forms that get evaluated when the let is evaluated. The value of the last expression is returned
+;; **
+
+;; @@
+(let [x 1 
+      y 2
+      z (+ x y)]
+  (println z))
+;; @@
+
+;; **
+;;; ###Side effects with do
+;;; In order to combine multiple s-expressions into a single form, Clojure provides the `do` form. It can be used for any situation as described previously where some side effect is desired and the higher-order form accepts only a single s-expression.
+;; **
+
+;; @@
+(if true
+  (do
+    (println "hi")
+    (println "hello")
+    "ok"))
+;; @@
+
+;; **
+;;; ###Reader Macros
+;; **
+
+;; @@
+'(1 2 3 4)
+\c
+;comment
+#{} ;set
+#"  ;regex
+;; @@
+
+;; **
+;;; ###Program Flow
+;;; 
+;;; if and if-not
+;; **
+
+;; @@
+(def x 1)
+(def y 2)
+(def z 3)
+(if (= x y) "eql" "not eql")
+(if-not (< x 0) "positive" "dunno")
+;; @@
+
+;; **
+;;; cond
+;; **
+
+;; @@
+(defn range-info [x]
+          (cond
+            (< x 0) "Negative!"
+            (= x 0) "Zero!"
+            :default "Positive!"))
+(range-info 3)
+;; @@
+
+;; **
+;;; when and when-not ( if without the alternative clause)
+;; **
+
+;; @@
+(when (> 3 0)
+  (println "3 more than 0"))
+;; @@
+
+;; @@
+(when-not (= 3 0)
+  (println "3 is not 0"))
+;; @@
+
+;; **
+;;; ### Logical Functions
+;; **
+
+;; @@
+(and (= 1 1) "hello" false true) ;returns first falsy
+(or (= 1 2) false nil "hero") ;returns first truthy
+(not true)
+;; @@
+
+;; **
+;;; ###Function Iteration
+;; **
+
+;; @@
+(while (request-on-queue?)
+         (handle-request (pop-request-queue)))
+;; @@
+
+;; **
+;;; `loop` sets up bindings and sets x to 10. `recur` will call the loop again applying new value to x.
+;;; 
+;; **
+
+;; @@
+(loop [x 10]
+  (when (> x 1)
+    (println x)
+    (recur (- x 2))))
+;; @@
+
+;; **
+;;; `recur` is a special form in Clojure, and despite looking recursive, it doesn’t con- sume the stack. recur can be used only from tail positions of code
+;; **
+
+;; @@
+(loop [current 10 fact 1]
+    (if (= current 1)
+      fact
+      (recur (dec current) (* fact current))))
+;; @@
+
+;; **
+;;; `doseq` accepts a vector containing two terms, where the first term is a new symbol, which will be sequentially bound to each element in the second term (which must be a sequence). The body will be executed for each element in the sequence.
+;; **
+
+;; @@
+(doseq [x [1 2 3]]
+  (println (+ x 5))) 
+;; @@
+
+;; **
+;;; `dotimes` takes two terms and calls the body n times
+;; **
+
+;; @@
+(dotimes [x 10]
+    (println "Double of " x "is =" (* x 2)))
+;; @@
+
+;; **
+;;; `map` calls a unary funtion on each element in given sequence. `filter` collects values passing the given predicate. `remove` is the opposite of `filter`.
+;; **
+
+;; @@
+(defn salute [name]
+  (str "Mr.Ms " name))
+
+(map salute ["Raj" "Ravi"])
+;; @@
+
+;; @@
+(filter pos? [1 2 3 4 -1 2 0])
+;; @@
+
+;; @@
+(remove zero? [0 0 1 2])
+;; @@
+
+;; **
+;;; `reduce` is applied to the first two elements of the sequence, producing the first result. The same function is then called again with this result and the next element of the sequence. This then repeats with the following element, and so on.
+;; **
+
+;; @@
+(reduce * [1 2 3 4 5]) ;factorial
+(reduce conj [1 2 3] [4 5 6]) ;add one seq to another
+
+;; @@
+
+;; @@
+(for [alpha "abcdefgh" num (range 1 3)]
+    (str alpha num))
+;; @@
+
+;; **
+;;; ###Chars, strings, and numbers
+;; **
+
+;; **
+;;; Calling java functions in clojure
+;; **
+
+;; @@
+(.split "clojure-in-action" "-")
+
+(.endsWith "program.clj" ".clj")
+;; @@
+
+;; **
+;;; Keywords are similar to those in languages like Ruby (where they’re called symbols). Some examples of keywords are `:first-name` and `:last-name`. 
+;; **
+
+;; **
+;;; ### Sequences
+;;; 
+;;; Lists, vectors and hash maps are examples of ISeq.
+;; **
+
+;; @@
+(first [1 2 3 4 5]) ;1
+(rest [1 2 3 4 5])  ;[2 3 4 5]
+(cons 1 [2 3 4 5])  ;[1 2 3 4 5]
+;; @@
+
+;; **
+;;; __List__
+;;; 
+;;; The list is special because each expression of Clojure code is a list. Clojure assumes that the first symbol appearing in a list represents the name of a function (or a macro). To make Clojure to not treat the list as code, use quote macro! `'(1 2 3)`
+;; **
+
+;; @@
+(list 1 2 3 4 5)
+(conj (list 1 2 3 4) 5)
+
+(let [a-list (list 1 2 3 4 5)]
+          (list? a-list))
+;; @@
+
+;; **
+;;; __Vector__
+;;; 
+;;; Vectors are like lists, except for two things: they’re denoted using square brackets, and they’re indexed by numbers. 
+;; **
+
+;; @@
+(vector 10 20 30 40 50)
+(def the-vector [10 20 30 40 50])
+(get the-vector 2)
+(the-vector 2)
+
+(get the-vector 9) ;nil
+(nth the-vector 9) ;exception
+;; @@
+
+;; **
+;;; __Maps__
+;;; 
+;;; Map is a sequence of key-value pairs. Keys can be keywords
+;; **
+
+;; @@
+(hash-map :a 1 :b 2 :c 3)
+(def the-map {:a 1 :b 2 :c 3})
+
+(the-map :a)
+(:a the-map)
+;; @@
+
+;; **
+;;; `assoc` adds a new key-value pair and `dissoc` removes by key
+;; **
+
+;; @@
+(assoc the-map :d 4) ;{:d 4, :a 1, :b 2, :c 3}
+(dissoc the-map :a)  ;{:b 2, :c 3, :d 4}
+;; @@
+
+;; **
+;;; Nested look-ups
+;; **
+
+;; @@
+(def deepmap {:kyle {:date-joined "2009-01-01", :summary {:average {:monthly 3000, :yearly 12000}}}})
+
+(assoc-in deepmap [:kyle :summary :average :monthly] 4000) ;set a deep nested key
+(get-in deepmap [:kyle :summary :average :monthly])
+;; @@
