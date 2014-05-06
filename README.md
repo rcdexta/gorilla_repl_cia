@@ -3,10 +3,17 @@
 Gorilla is a rich REPL for Clojure in the notebook style. If you're interested you should take a look at its
 [website](http://gorilla-repl.org).
 
-## Contributing
+## To run
 
-Contributions, in the form of comments, criticism, bug reports, or code are all very welcome :-) If you've got an idea
-for a big change drop me an email so we can coordinate work.
+`lein install`
+`lein run`
+
+and hit the browser from given URL.
+
+## Shortcuts
+
+Use CTRL+G+L to load lessons
+Use CTRL+G+S to save lessons
 
 ## Licence
 
